@@ -10,29 +10,32 @@
 {0pt}{1.0ex plus 1ex minus .2ex}{1.0ex plus .2ex}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage[margin=0.8in]{geometry}
+\usepackage[margin=0.4in]{geometry}
 
 \date{} % overwrite default format
-\author{Norbert Logiewa\\nl253}
+% \author{Norbert Logiewa\\nl253}
+\author{}
 \title{Project Proposal \\ Story Generator}
 
 \begin{document}
 
 \maketitle
 
+\vspace{-1.5cm}
+
 \section*{Project Description}
 
 Story Generator will be a system allowing to generate prose from an initial
 chunk of text. The system will ask the user for input and will try to complete
 the story using the input as the initial state.  It will attempt to produce
-text in a style particular to stories i.e. it will ensure consistency in
+text in the style of stories i.e. it will ensure consistency in
 the use of past tense, atmosphere and use of language. The ultimate aim is
 that it generates text that resembles prose written by a human author.
 
 \section*{Technique}
 
 The mechanism for generating stories will rely on Markov Chains. The system
-will compute conditional probabilities of some word $\alpha$ occurring
+will compute conditional probabilities of some word occurring
 based on the preceding $n$ words from a corpus of text. The text (the
 corpus) will be provided to the system in advance and will be taken from
 \href{https://www.gutenberg.org/}{Project Gutenberg} which makes available to
@@ -51,10 +54,12 @@ The reasoning behind it is as follows: Python it concise, allows for quick
 prototyping, is very legible and makes common tasks (e.g. splitting strings
 into words) very easy. It also gives access to the said library.
 
+\vspace{0.2cm}
+
 \section*{Evaluation}
 
 In terms of evaluation the system will try to quantify the quality of it's
-outcomes by considering:
+outcomes by considering criteria specific to the task such as:
 
 \begin{itemize}		
   \item linguistic diversity (creative use of language, richness of vocabulary)
@@ -62,6 +67,17 @@ outcomes by considering:
   \item global coherence (if the story makes sense as a whole)
   \item interestingness (how much the story draws the reader in)
   \item structure (presence of an introduction, a conclusion, paragraphs, sentences, correct punctuation etc.)
+  \item if the system is creative (was there an intention to create something novel, was the thing created really "new", was that exploratory or transformational creativity) \\ 
+\end{itemize}		
+
+\hspace{-0.8cm}
+As part of the evaluation I will also consider more general criteria for a creative system such as:
+
+\begin{itemize}		
+  \item reliance on recombination or creation of something unexpected (exploratory vs transformational creativity)
+  \item consistently of quality of output
+  \item need for human verification or input (independence)
+  \item if the system would pass the Turing Test 
 \end{itemize}		
 
 \end{document}
