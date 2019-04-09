@@ -1,0 +1,5 @@
+venv
+generated
+cache
+.mypy_cache
+tags
