@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 # Standard Library
+# Standard Library
+# Standard Library
 import logging
 import re
 from array import array
-from functools import reduce
 from copy import deepcopy
+from functools import reduce
+from os import getenv, listdir
+from os.path import isfile, join
 from random import choices
-from os.path import join, isfile
-from os import listdir, getenv
-import re 
-from typing import Any, Dict, List, Tuple, Optional, Set, Match, Union, Iterator
+from typing import Any, Dict, Iterator, List, Match, Optional, Set, Tuple, Union
 
 TOKENIZE_REGEX = re.compile(r"(?P<token>(?P<punc>[,;])|(?P<sentend>\.(\.\.)?|\?(\?\?)?|!(!!)?)|(?P<word>([A-Za-z]?[a-z]+|[IAO])(-[a-z]+)*('[a-z]{0,4})?)|(?P<dash>--?)|(?P<qt>[\"']))", re.A | re.S)
 
-SENT_ENDINGS: Set[str] = {'.', '?', '!', '...', '???', '!!!'};
+SENT_ENDINGS: Set[str] = {'.', '?', '!', '...', '???', '!!!'}
 SENT_ENDINGS_LIST: List[str] = list(SENT_ENDINGS)
 SENT_ENDINGS_WEIGHTS: List[float] = \
-                         [0.55, 0.2, 0.1, 0.05, 0.05, 0.05]
+    [0.55, 0.2, 0.1, 0.05, 0.05, 0.05]
 
 DONT_REPEAT_TAGS: Set[str] = {'sentend', 'punc', 'qt', 'dash'}
 
@@ -24,6 +25,7 @@ DONT_REPEAT_TAGS: Set[str] = {'sentend', 'punc', 'qt', 'dash'}
 logging.basicConfig(format='%(levelname)s %(message)s')
 log = logging.getLogger('Corpus Logger')
 log.setLevel(eval(f'logging.{getenv("LOG", "debug").upper()}', locals(), globals()))
+
 
 def tokenize(txt: str) -> Iterator[Match]:
     global TOKENIZE_REGEX
@@ -42,6 +44,7 @@ def make_index(xs: List[Any]) -> Tuple[List[Any], Dict[Any, int]]:
             a.append(x)
             idx += 1
     return a, d
+
 
 def prettify(tokens: Union[Tuple[str, ...], List[str]]) -> str:
     """Transform list of words to legible text suitable for human consumption.
@@ -198,7 +201,7 @@ class Corpus:
 
         prev_tag: str = 'word'
 
-        # pre-process 
+        # pre-process
         nremoved = 0
 
         for m in tokenize(self.text):
@@ -219,13 +222,13 @@ class Corpus:
             words.append(m.group('token'))
             prev_tag = tag
 
-        log.info(f'created {len(words)} tokens, ratio of nchars to ntokens = {len(self.text)/len(words):4.2f}')
+        log.info(f'created {len(words)} tokens, ratio of nchars to ntokens = {len(self.text) / len(words):4.2f}')
         log.info(f'pre-processing removed {nremoved} tokens (corpus smaller by {nremoved / (nremoved + len(words)):6.4f})')
 
         idx_to_word, word_to_idx = make_index(words)
         self._idx_to_word = idx_to_word
         self._word_to_idx = word_to_idx
-        # homogenous u32 array 
+        # homogenous u32 array
         self._word_idxs = array('L', [0 for i in range(len(words))])
 
         ptr = 0
@@ -252,7 +255,7 @@ class Corpus:
             """
             d: Dict[Tuple[int, ...], Dict[int, int]] = dict()
 
-            # look ahead 
+            # look ahead
             for ptr in range(len(self._word_idxs) - n - 1):
                 record: Tuple[int, ...] = tuple(self._word_idxs[ptr:ptr + n])
                 next_w: int = self._word_idxs[ptr + n]
@@ -286,7 +289,7 @@ class Corpus:
 
             total: int = sum(counts.values())
 
-            probs = counts
+            probs: Dict[int, float] = counts
 
             del counts
 
@@ -333,9 +336,9 @@ class Corpus:
         if self._dummy_index is None:
             self._dummy_index = list(range(len(self.word_ps())))
         return choices(
-                population=self._dummy_index,
-                weights=self._word_ps,
-                k=1)[0]
+            population=self._dummy_index,
+            weights=self._word_ps,
+            k=1)[0]
 
     def markov(self, s='Once upon a time there was a', n=2, max_len=100) -> List[str]:
         words: List[str] = [m.group('token') for m in tokenize(s)]
@@ -351,7 +354,7 @@ class Corpus:
         while len(word_idxs) < max_len:
             found = False
 
-            for i in range(n, 1, -1): # upper is exclusive so iterate up to n..2
+            for i in range(n, 1, -1):  # upper is exclusive so iterate up to n..2
 
                 slice: Tuple[int, ...] = tuple(word_idxs[-i:])
                 words: List[str] = []
@@ -362,7 +365,8 @@ class Corpus:
                 words_s = ' '.join(words)
 
                 nword_ps_dict = self.nword_ps(n=i)
-                maybe: Optional[Dict[int, float]] = nword_ps_dict.get(slice, None)
+                maybe: Optional[Dict[int, float]] \
+                        = nword_ps_dict.get(slice, None)
 
                 if maybe is not None:
                     usefulness[n] += 1
@@ -373,7 +377,7 @@ class Corpus:
                     rand_widx: int = choices(population=idxs, weights=ps, k=1)[0]
 
                     candidate_width: int = \
-                            reduce(max, (len(cand) for cand in map(lambda idx: self._idx_to_word[idx], idxs)))
+                        reduce(max, (len(cand) for cand in map(lambda idx: self._idx_to_word[idx], idxs)))
 
                     log.debug(f'{words_s} {" ".rjust(candidate_width)} (last {i} words)')
 
