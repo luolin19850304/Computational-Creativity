@@ -3,10 +3,13 @@
 This application implement a Markov Chain (MC) which is used to generate
 stories from intial strings provided by users.
 
-It has simple but interactive command line interface. Once the model is
-built, stories are generated instantaneously in response to users' input.
+It has simple but interactive command line interface. There is a
+Read-Eval-Print Loop and `readline` line editing is used
+(see https://en.wikipedia.org/wiki/GNU_Readline).
+Once the model is built, stories are generated instantaneously in response
+to users' input.
 
-You can set options that the MC runs by supplying flags such as -l <INT>.
+You can set options that the MC runs with by supplying flags such as -l <INT>.
 Standard UNIX conventions are used and you can see all flags with:
 
     $ python3 ./story_generator.py -h
@@ -19,6 +22,9 @@ with the -v <debug|info|warning> flag. E.g.:
 
 I am making use of Python's standard library but all the remaining code
 is mine.
+
+The code is written in Python3.6.  It should work with the last 3
+versions: 3.8 (pre), 3.7 and 3.6 should work.
 
 Norbert Logiewa 2019
 """
@@ -448,7 +454,7 @@ class StoryGenerator:
                     [self.word_to_idx.get(w, None) for w in words]
             for i in range(len(word_idxs)):
                 if word_idxs[i] is None:
-                    log.warn(f'unrecognised word {words[i]} (unseen in corpus), replacing with a rand word')
+                    log.warn(f'unrecognised word "{words[i]}" (unseen in corpus), replacing with a rand word')
                     word_idxs[i] = self.rand_word_idx
             return word_idxs
 
@@ -548,7 +554,7 @@ if __name__ == '__main__':
         "-l",
         "--max_len",
         help="length of text to generate",
-        default=200,
+        default=300,
         type=int,
         metavar='INT',
     )
@@ -586,7 +592,7 @@ if __name__ == '__main__':
         "-v",
         "--verbosity",
         choices={'debug', 'info', 'warning'},
-        default='info',
+        default='debug',
         help="increase output verbosity",
     )
 
