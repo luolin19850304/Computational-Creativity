@@ -53,7 +53,7 @@ from typing import (
 MAX_FILES = 100
 
 # more efficient than NLTK tokenize
-TOKENIZE_REGEX = re.compile(r"(?P<token>(?P<punc>[,;])|(?P<sentend>\.(\.\.)?|\?(\?\?)?|!(!!)?)|(?P<word>([A-Za-z]?[a-z]+|[IAO])(-[a-z]+)*('[a-z]{0,4})?)|(?P<dash>--?)|(?P<qt>[\"']))", re.A | re.S)
+TOKENIZE_REGEX = re.compile(r"(?P<token>(?P<punc>[,;])|(?P<sentend>\.(\.\.)?|\?(\?\?)?|!(!!)?)|(?P<word>([A-Za-z]?[a-z]+|[IAO])(-[a-z]+)*('[a-z]{0,5})?)|(?P<dash>--?)|(?P<qt>[\"']))", re.A | re.S)
 
 # for lookup
 SENT_ENDINGS = {'.', '?', '!', '...', '???', '!!!'}
@@ -276,7 +276,7 @@ class StoryGenerator:
 
     @staticmethod
     def from_all_files(
-            n: int, min_freq: int, min_p: float, min_entries: int, **kwargs) -> object:
+            n: int, min_freq: int, min_p: float, min_entries: int, **kwargs):
         max_n_errors = 10
         chunk_size = 10
         delta = 2
