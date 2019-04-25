@@ -60,7 +60,7 @@ stories. Logging will show you what is being done at which step.
 
 This hopefully makes the actions of the application and the decision
 making process more transparent. If you find the amount of logging
-annoying, you can re-run the application with the `-l info` flag which
+annoying, you can re-run the application with the `-v info` flag which
 which will cause it to log less.
 
 [show how you can run the application with the `-l info` flag]
@@ -134,7 +134,7 @@ suggest a word based on the context, you can scroll up and trace the logs.
 
 [scroll up to the first transition]
 
-When suggesting the next word, the system prints the candidates words along
+When suggesting the next word, the system prints the candidates along
 with their probabilities
 
 [higlight the whole thing]
